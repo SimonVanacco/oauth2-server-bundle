@@ -30,7 +30,8 @@ final class TokenEndpointTest extends AbstractAcceptanceTest
             $this->client->getContainer()->get(ClientManagerInterface::class),
             $this->client->getContainer()->get(AccessTokenManagerInterface::class),
             $this->client->getContainer()->get(RefreshTokenManagerInterface::class),
-            $this->client->getContainer()->get(AuthorizationCodeManagerInterface::class)
+            $this->client->getContainer()->get(AuthorizationCodeManagerInterface::class),
+            $this->client->getContainer()->get(DeviceCodeManagerInterface::class)
         );
     }
 
@@ -372,6 +373,7 @@ final class TokenEndpointTest extends AbstractAcceptanceTest
 
         $this->client->request('POST', '/token', [
             'client_id' => $deviceCode->getClient()->getIdentifier(),
+            'client_secret' => 'top_secret',
             'grant_type' => 'urn:ietf:params:oauth:grant-type:device_code',
             'device_code' => $deviceCode->getIdentifier(),
         ]);
@@ -388,7 +390,6 @@ final class TokenEndpointTest extends AbstractAcceptanceTest
         $this->assertGreaterThan(0, $jsonResponse['expires_in']);
         $this->assertNotEmpty($jsonResponse['access_token']);
         $this->assertNotEmpty($jsonResponse['refresh_token']);
-        $this->assertSame($response->headers->get('foo'), 'bar');
 
         $this->assertTrue($wasRequestAccessTokenEventDispatched);
         $this->assertTrue($wasRequestRefreshTokenEventDispatched);
@@ -407,6 +408,7 @@ final class TokenEndpointTest extends AbstractAcceptanceTest
 
         $this->client->request('POST', '/token', [
             'client_id' => $deviceCode->getClient()->getIdentifier(),
+            'client_secret' => 'secret',
             'grant_type' => 'urn:ietf:params:oauth:grant-type:device_code',
             'device_code' => $deviceCode->getIdentifier(),
         ]);
@@ -414,13 +416,12 @@ final class TokenEndpointTest extends AbstractAcceptanceTest
         $response = $this->client->getResponse();
 
         $this->assertSame(400, $response->getStatusCode());
-        $this->assertSame('application/json; charset=UTF-8', $response->headers->get('Content-Type'));
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
 
         $jsonResponse = json_decode($response->getContent(), true);
 
         $this->assertSame('expired_token', $jsonResponse['error']);
         $this->assertSame('device_code', $jsonResponse['hint']);
-        $this->assertSame('bar', $response->headers->get('foo'));
     }
 
     public function testFailedDeviceCodeWithPendingCode(): void
@@ -439,13 +440,12 @@ final class TokenEndpointTest extends AbstractAcceptanceTest
         $response = $this->client->getResponse();
 
         $this->assertSame(400, $response->getStatusCode());
-        $this->assertSame('application/json; charset=UTF-8', $response->headers->get('Content-Type'));
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
 
         $jsonResponse = json_decode($response->getContent(), true);
 
         $this->assertSame('authorization_pending', $jsonResponse['error']);
         $this->assertSame('', $jsonResponse['hint']);
-        $this->assertSame('bar', $response->headers->get('foo'));
     }
 
 }

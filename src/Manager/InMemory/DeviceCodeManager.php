@@ -16,7 +16,7 @@ final class DeviceCodeManager implements DeviceCodeManagerInterface
 
     public function find(string $identifier): ?DeviceCodeInterface
     {
-        return $this->accessTokens[$identifier] ?? null;
+        return $this->deviceCodes[$identifier] ?? null;
     }
 
     public function findByUserCode(string $code): ?DeviceCodeInterface

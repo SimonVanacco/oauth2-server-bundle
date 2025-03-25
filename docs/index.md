@@ -6,7 +6,7 @@ For implementation into Symfony projects, please see [bundle documentation](basi
 
 ## Features
 
-* API endpoint for client authorization and token issuing
+* API endpoint for client authorization, device code and token issuing
 * Configurable client and token persistance (includes [Doctrine](https://www.doctrine-project.org/) support)
 * Integration with Symfony's [Security](https://symfony.com/doc/current/security.html) layer
 

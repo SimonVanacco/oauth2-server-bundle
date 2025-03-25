@@ -302,6 +302,7 @@ return static function (ContainerConfigurator $container): void {
                 service(AccessTokenManagerInterface::class),
                 service(RefreshTokenManagerInterface::class),
                 service(AuthorizationCodeManagerInterface::class),
+                service(DeviceCodeManagerInterface::class),
             ])
             ->tag('console.command', ['command' => 'league:oauth2-server:clear-expired-tokens'])
         ->alias(ClearExpiredTokensCommand::class, 'league.oauth2_server.command.clear_expired_tokens')

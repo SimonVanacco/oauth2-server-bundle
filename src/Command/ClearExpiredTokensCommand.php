@@ -76,7 +76,7 @@ final class ClearExpiredTokensCommand extends Command
             )
             ->addOption(
                 'device-codes',
-                'c',
+                'dc',
                 InputOption::VALUE_NONE,
                 'Clear expired device codes.'
             )

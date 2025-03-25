@@ -122,8 +122,8 @@ final class DoctrineCredentialsRevoker implements CredentialsRevokerInterface
 
         $this->entityManager->createQueryBuilder()
             ->update(DeviceCode::class, 'dc')
-            ->set('ac.revoked', ':revoked')
-            ->where('ad.client = :client')
+            ->set('dc.revoked', ':revoked')
+            ->where('dc.client = :client')
             ->setParameter('client', $doctrineClient->getIdentifier(), 'string')
             ->setParameter('revoked', true)
             ->getQuery()

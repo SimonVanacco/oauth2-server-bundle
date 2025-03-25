@@ -38,7 +38,7 @@ final class DoctrineDeviceCodeManagerTest extends AbstractAcceptanceTest
         $this->assertSame(3, $doctrineDeviceCodeManager->clearExpired());
 
         $this->assertSame(
-            $testData['output'],
+            array_values($testData['output']),
             $em->getRepository(DeviceCode::class)->findBy([], ['identifier' => 'ASC'])
         );
     }
@@ -58,8 +58,8 @@ final class DoctrineDeviceCodeManagerTest extends AbstractAcceptanceTest
         ];
 
         return [
-            'input' => $validDeviceCodes + $expiredDeviceCodes,
             'output' => $validDeviceCodes,
+            'input' => $validDeviceCodes + $expiredDeviceCodes,
         ];
     }
 

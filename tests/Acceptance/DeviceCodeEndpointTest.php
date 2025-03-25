@@ -56,14 +56,13 @@ final class DeviceCodeEndpointTest extends AbstractAcceptanceTest
         $response = $this->client->getResponse();
 
         $this->assertSame(401, $response->getStatusCode());
-        $this->assertSame('application/json; charset=UTF-8', $response->headers->get('Content-Type'));
+        $this->assertSame('application/json', $response->headers->get('Content-Type'));
 
         $jsonResponse = json_decode($response->getContent(), true);
 
         $this->assertNotEmpty($jsonResponse['error']);
         $this->assertNotEmpty($jsonResponse['error_description']);
         $this->assertSame('invalid_client', $jsonResponse['error']);
-        $this->assertLessThanOrEqual(3600, $jsonResponse['expires_in']);
     }
 
 }

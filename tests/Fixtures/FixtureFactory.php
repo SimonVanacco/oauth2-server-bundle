@@ -270,9 +270,9 @@ final class FixtureFactory
 
         $deviceCodes[] = new DeviceCode(
             self::FIXTURE_DEVICE_CODE,
-            new \DateTimeImmutable('+2 minute'),
+            new \DateTimeImmutable('+10 minute'),
             $clientManager->find(self::FIXTURE_CLIENT_FIRST),
-            self::FIXTURE_USER,
+            null,
             [],
             'XQMWNGSP',
             false,
@@ -284,9 +284,9 @@ final class FixtureFactory
 
         $deviceCodes[] = new DeviceCode(
             self::FIXTURE_DEVICE_CODE_PUBLIC_CLIENT,
-            new \DateTimeImmutable('+2 minute'),
+            new \DateTimeImmutable('+10 minute'),
             $clientManager->find(self::FIXTURE_PUBLIC_CLIENT),
-            self::FIXTURE_USER,
+            null,
             [],
             'XQMWNGSP',
             false,
@@ -298,7 +298,7 @@ final class FixtureFactory
 
         $deviceCodes[] = new DeviceCode(
             self::FIXTURE_DEVICE_CODE_APPROVED,
-            new \DateTimeImmutable('+2 minute'),
+            new \DateTimeImmutable('+10 minute'),
             $clientManager->find(self::FIXTURE_CLIENT_SECOND),
             self::FIXTURE_USER,
             [],
@@ -314,7 +314,7 @@ final class FixtureFactory
             self::FIXTURE_DEVICE_CODE_EXPIRED,
             new \DateTimeImmutable('-30 minute'),
             $clientManager->find(self::FIXTURE_CLIENT_FIRST),
-            self::FIXTURE_USER,
+            null,
             [],
             'XQMWNGSP',
             false,
