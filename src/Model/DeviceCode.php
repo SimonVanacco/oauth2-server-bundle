@@ -117,6 +117,13 @@ class DeviceCode implements DeviceCodeInterface
         return $this->userIdentifier;
     }
 
+    public function setUserIdentifier($userIdentifier): DeviceCodeInterface
+    {
+        $this->userIdentifier = $userIdentifier;
+
+        return $this;
+    }
+
     public function getClient(): ClientInterface
     {
         return $this->client;
@@ -147,6 +154,13 @@ class DeviceCode implements DeviceCodeInterface
     public function getUserApproved(): bool
     {
         return $this->userApproved;
+    }
+
+    public function setUserApproved(bool $userApproved): DeviceCodeInterface
+    {
+        $this->userApproved = $userApproved;
+
+        return $this;
     }
 
     public function getIncludeVerificationUriComplete(): bool

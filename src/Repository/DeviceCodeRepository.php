@@ -12,6 +12,7 @@ use League\Bundle\OAuth2ServerBundle\Model\AbstractClient;
 use League\Bundle\OAuth2ServerBundle\Model\DeviceCode as DeviceCodeModel;
 use League\Bundle\OAuth2ServerBundle\Model\DeviceCodeInterface;
 use League\OAuth2\Server\Entities\DeviceCodeEntityInterface;
+use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\DeviceCodeRepositoryInterface;
 
@@ -57,16 +58,40 @@ final class DeviceCodeRepository implements DeviceCodeRepositoryInterface
     public function persistDeviceCode(DeviceCodeEntityInterface $deviceCodeEntity): void
     {
         $deviceCode = $this->deviceCodeManager->find($deviceCodeEntity->getIdentifier());
+        $newDeviceCode = false;
 
         if ($deviceCode) {
             if ($deviceCodeEntity->getLastPolledAt()) {
                 $deviceCode->setLastPolledAt($deviceCodeEntity->getLastPolledAt());
             }
         } else {
+            $newDeviceCode = true;
             $deviceCode = $this->buildDeviceCodeModel($deviceCodeEntity);
         }
 
-        $this->deviceCodeManager->save($deviceCode);
+        $this->deviceCodeManager->save($deviceCode, $newDeviceCode);
+    }
+
+    public function approveDeviceCode(string $userCode, string $userId): void
+    {
+        $deviceCode = $this->deviceCodeManager->findByUserCode($userCode);
+
+        if ($deviceCode instanceof DeviceCodeInterface === false) {
+            throw OAuthServerException::invalidRequest('device_code', 'Device code does not exist');
+        }
+
+        if ($deviceCode->isRevoked()) {
+            throw OAuthServerException::invalidRequest('device_code', 'Device code has been revoked');
+        }
+
+        if ($userId === '') {
+            throw OAuthServerException::invalidRequest('user_id', 'User ID is required');
+        }
+
+        $deviceCode->setUserIdentifier($userId);
+        $deviceCode->setUserApproved(true);
+
+        $this->deviceCodeManager->save($deviceCode, false);
     }
 
     public function getDeviceCodeEntityByDeviceCode(string $deviceCodeEntity): ?DeviceCodeEntityInterface
@@ -90,7 +115,7 @@ final class DeviceCodeRepository implements DeviceCodeRepositoryInterface
 
         $deviceCode->revoke();
 
-        $this->deviceCodeManager->save($deviceCode);
+        $this->deviceCodeManager->save($deviceCode, false);
     }
 
     public function isDeviceCodeRevoked(string $codeId): bool

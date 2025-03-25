@@ -16,6 +16,8 @@ interface DeviceCodeInterface
 
     public function getUserIdentifier(): ?string;
 
+    public function setUserIdentifier(string $userIdentifier): self;
+
     public function getClient(): ClientInterface;
 
     /**
@@ -30,6 +32,8 @@ interface DeviceCodeInterface
     public function getUserCode(): string;
 
     public function getUserApproved(): bool;
+
+    public function setUserApproved(bool $userApproved): self;
 
     public function getIncludeVerificationUriComplete(): bool;
 

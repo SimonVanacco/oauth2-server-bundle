@@ -19,7 +19,7 @@ final class DeviceCodeManager implements DeviceCodeManagerInterface
         return $this->accessTokens[$identifier] ?? null;
     }
 
-    public function findByCode(string $code): ?DeviceCodeInterface
+    public function findByUserCode(string $code): ?DeviceCodeInterface
     {
         foreach ($this->deviceCodes as $deviceCode) {
             if ($deviceCode->getUserCode() === $code) {
@@ -30,7 +30,7 @@ final class DeviceCodeManager implements DeviceCodeManagerInterface
         return null;
     }
 
-    public function save(DeviceCodeInterface $deviceCode): void
+    public function save(DeviceCodeInterface $deviceCode, bool $persist = true): void
     {
         $this->deviceCodes[$deviceCode->getIdentifier()] = $deviceCode;
     }
