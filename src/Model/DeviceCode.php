@@ -164,6 +164,13 @@ class DeviceCode implements DeviceCodeInterface
         return $this->lastPolledAt;
     }
 
+    public function setLastPolledAt(\DateTimeImmutable $lastPolledAt): DeviceCodeInterface
+    {
+        $this->lastPolledAt = $lastPolledAt;
+
+        return $this;
+    }
+
     public function getInterval(): int
     {
         return $this->interval;

@@ -12,7 +12,6 @@ use League\Bundle\OAuth2ServerBundle\Model\AbstractClient;
 use League\Bundle\OAuth2ServerBundle\Model\DeviceCode as DeviceCodeModel;
 use League\Bundle\OAuth2ServerBundle\Model\DeviceCodeInterface;
 use League\OAuth2\Server\Entities\DeviceCodeEntityInterface;
-use League\OAuth2\Server\Exception\UniqueTokenIdentifierConstraintViolationException;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\DeviceCodeRepositoryInterface;
 
@@ -59,18 +58,21 @@ final class DeviceCodeRepository implements DeviceCodeRepositoryInterface
     {
         $deviceCode = $this->deviceCodeManager->find($deviceCodeEntity->getIdentifier());
 
-        if (null !== $deviceCode) {
-            throw UniqueTokenIdentifierConstraintViolationException::create();
+        if ($deviceCode) {
+            if ($deviceCodeEntity->getLastPolledAt()) {
+                $deviceCode->setLastPolledAt($deviceCodeEntity->getLastPolledAt());
+            }
+        } else {
+            $deviceCode = $this->buildDeviceCodeModel($deviceCodeEntity);
         }
-
-        $deviceCode = $this->buildDeviceCodeModel($deviceCodeEntity);
 
         $this->deviceCodeManager->save($deviceCode);
     }
 
     public function getDeviceCodeEntityByDeviceCode(string $deviceCodeEntity): ?DeviceCodeEntityInterface
     {
-        $deviceCode = $this->deviceCodeManager->findByCode($deviceCodeEntity);
+        $deviceCode = $this->deviceCodeManager->find($deviceCodeEntity);
+
         if (null === $deviceCode) {
             return null;
         }
@@ -110,12 +112,16 @@ final class DeviceCodeRepository implements DeviceCodeRepositoryInterface
         $deviceCodeEntity->setClient(
             $this->clientRepository->buildClientEntity($deviceCode->getClient())
         );
-        $deviceCodeEntity->setUserIdentifier($deviceCode->getUserIdentifier());
+        if ($deviceCode->getUserIdentifier()) {
+            $deviceCodeEntity->setUserIdentifier($deviceCode->getUserIdentifier());
+        }
         $deviceCodeEntity->setUserCode($deviceCode->getUserCode());
         $deviceCodeEntity->setUserApproved($deviceCode->getUserApproved());
         $deviceCodeEntity->setVerificationUriCompleteInAuthResponse($deviceCode->getIncludeVerificationUriComplete());
         $deviceCodeEntity->setVerificationUri($deviceCode->getVerificationUri());
-        $deviceCodeEntity->setLastPolledAt($deviceCode->getLastPolledAt());
+        if ($deviceCode->getLastPolledAt()) {
+            $deviceCodeEntity->setLastPolledAt($deviceCode->getLastPolledAt());
+        }
         $deviceCodeEntity->setInterval($deviceCode->getInterval());
 
         foreach ($deviceCode->getScopes() as $scope) {

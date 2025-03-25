@@ -37,7 +37,8 @@ interface DeviceCodeInterface
 
     public function getLastPolledAt(): ?\DateTimeImmutable;
 
-    public function getInterval(): int;
+    public function setLastPolledAt(\DateTimeImmutable $lastPolledAt): self;
 
+    public function getInterval(): int;
 
 }
