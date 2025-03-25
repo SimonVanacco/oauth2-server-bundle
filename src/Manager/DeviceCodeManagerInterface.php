@@ -10,6 +10,8 @@ interface DeviceCodeManagerInterface
 {
     public function find(string $identifier): ?DeviceCodeInterface;
 
+    public function findByCode(string $code): ?DeviceCodeInterface;
+
     public function save(DeviceCodeInterface $deviceCode): void;
 
     public function clearExpired(): int;

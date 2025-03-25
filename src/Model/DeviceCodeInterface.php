@@ -12,7 +12,7 @@ interface DeviceCodeInterface
 
     public function getIdentifier(): string;
 
-    public function getExpiry(): \DateTimeInterface;
+    public function getExpiry(): \DateTimeImmutable;
 
     public function getUserIdentifier(): ?string;
 
@@ -35,7 +35,7 @@ interface DeviceCodeInterface
 
     public function getVerificationUri(): string;
 
-    public function getLastPolledAt(): ?\DateTimeInterface;
+    public function getLastPolledAt(): ?\DateTimeImmutable;
 
     public function getInterval(): int;
 

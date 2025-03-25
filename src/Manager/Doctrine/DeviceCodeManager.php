@@ -26,6 +26,18 @@ final class DeviceCodeManager implements DeviceCodeManagerInterface
         return $this->entityManager->find(DeviceCode::class, $identifier);
     }
 
+    public function findByCode(string $code): ?DeviceCodeInterface
+    {
+        /** @var DeviceCodeInterface */
+        return $this->entityManager->createQueryBuilder()
+                                   ->select('dc')
+                                   ->from(DeviceCode::class, 'dc')
+                                   ->where('dc.userCode = :code')
+                                   ->setParameter('code', $code)
+                                   ->getQuery()
+                                   ->getOneOrNullResult();
+    }
+
     public function save(DeviceCodeInterface $deviceCode): void
     {
         $this->entityManager->persist($deviceCode);
@@ -42,4 +54,5 @@ final class DeviceCodeManager implements DeviceCodeManagerInterface
             ->getQuery()
             ->execute();
     }
+
 }

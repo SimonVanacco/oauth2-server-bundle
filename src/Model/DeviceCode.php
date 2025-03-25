@@ -73,7 +73,7 @@ class DeviceCode implements DeviceCodeInterface
      */
     public function __construct(
         string $identifier,
-        \DateTimeInterface $expiry,
+        \DateTimeImmutable $expiry,
         ClientInterface $client,
         ?string $userIdentifier,
         array $scopes,
@@ -81,7 +81,7 @@ class DeviceCode implements DeviceCodeInterface
         bool $userApproved,
         bool $includeVerificationUriComplete,
         string $verificationUri,
-        ?\DateTimeInterface $lastPolledAt,
+        ?\DateTimeImmutable $lastPolledAt,
         int $interval
     ) {
         $this->identifier = $identifier;
@@ -107,7 +107,7 @@ class DeviceCode implements DeviceCodeInterface
         return $this->identifier;
     }
 
-    public function getExpiry(): \DateTimeInterface
+    public function getExpiry(): \DateTimeImmutable
     {
         return $this->expiry;
     }
@@ -159,7 +159,7 @@ class DeviceCode implements DeviceCodeInterface
         return $this->verificationUri;
     }
 
-    public function getLastPolledAt(): ?\DateTimeInterface
+    public function getLastPolledAt(): ?\DateTimeImmutable
     {
         return $this->lastPolledAt;
     }

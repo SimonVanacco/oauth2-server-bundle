@@ -19,6 +19,17 @@ final class DeviceCodeManager implements DeviceCodeManagerInterface
         return $this->accessTokens[$identifier] ?? null;
     }
 
+    public function findByCode(string $code): ?DeviceCodeInterface
+    {
+        foreach ($this->deviceCodes as $deviceCode) {
+            if ($deviceCode->getUserCode() === $code) {
+                return $deviceCode;
+            }
+        }
+
+        return null;
+    }
+
     public function save(DeviceCodeInterface $deviceCode): void
     {
         $this->deviceCodes[$deviceCode->getIdentifier()] = $deviceCode;
@@ -35,4 +46,5 @@ final class DeviceCodeManager implements DeviceCodeManagerInterface
 
         return $count - \count($this->deviceCodes);
     }
+
 }

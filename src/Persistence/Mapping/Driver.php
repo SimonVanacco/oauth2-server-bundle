@@ -144,7 +144,7 @@ class Driver implements MappingDriver
             ->addField('userApproved', 'boolean')
             ->addField('includeVerificationUriComplete', 'boolean')
             ->createField('verificationUri', 'string')->length(255)->nullable(true)->build()
-            ->addField('lastPolledAt', 'datetime_immutable')
+            ->createField('lastPolledAt', 'datetime_immutable')->nullable(true)->build()
             ->addField('interval', 'integer')
             ->createManyToOne('client', $this->clientClass)->addJoinColumn('client', 'identifier', false, false, 'CASCADE')->build()
         ;
