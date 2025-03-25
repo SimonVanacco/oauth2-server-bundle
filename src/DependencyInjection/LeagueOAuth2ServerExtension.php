@@ -229,8 +229,8 @@ final class LeagueOAuth2ServerExtension extends Extension implements PrependExte
         $deviceCodeGrantDefinition = $container->findDefinition(DeviceCodeGrant::class);
         $deviceCodeGrantDefinition
             ->replaceArgument(2, new Definition(\DateInterval::class, [$config['device_code_ttl']]))
-            ->replaceArgument(3, '/verify-device')
-            ->replaceArgument(4, 5)
+            ->replaceArgument(3, $config['device_code_verification_uri'])
+            ->replaceArgument(4, $config['device_code_polling_interval'])
             ->addMethodCall('setRefreshTokenTTL', [
                 new Definition(\DateInterval::class, [$config['refresh_token_ttl']]),
             ])

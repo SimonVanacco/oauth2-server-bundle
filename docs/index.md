@@ -69,14 +69,20 @@ For implementation into Symfony projects, please see [bundle documentation](basi
             # Whether to enable the authorization code grant
             enable_auth_code_grant: true
 
-            # Whether to enable the device code grant
-            enable_device_code_grant: true
-
             # Whether to require code challenge for public clients for the auth code grant
             require_code_challenge_for_public_clients: true
 
             # Whether to enable access token saving to persistence layer (default to true)
             persist_access_token: true
+
+            # Whether to enable the device code grant
+            enable_device_code_grant: true
+
+            # The full URI the user will need to visit to enter the user code
+            device_code_verification_uri: ''
+
+            # How soon (in seconds) can the device code be used to poll for the access token without being throttled
+            device_code_polling_interval: 5
 
         resource_server:      # Required
 
