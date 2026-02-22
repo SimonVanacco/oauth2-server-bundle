@@ -12,7 +12,6 @@ use League\Bundle\OAuth2ServerBundle\Model\AbstractClient;
 use League\Bundle\OAuth2ServerBundle\Model\DeviceCode as DeviceCodeModel;
 use League\Bundle\OAuth2ServerBundle\Model\DeviceCodeInterface;
 use League\OAuth2\Server\Entities\DeviceCodeEntityInterface;
-use League\OAuth2\Server\Exception\OAuthServerException;
 use League\OAuth2\Server\Repositories\ClientRepositoryInterface;
 use League\OAuth2\Server\Repositories\DeviceCodeRepositoryInterface;
 
@@ -64,28 +63,6 @@ final class DeviceCodeRepository implements DeviceCodeRepositoryInterface
         } else {
             $this->updateDeviceCodeModel($deviceCode, $deviceCodeEntity);
         }
-
-        $this->deviceCodeManager->save($deviceCode);
-    }
-
-    public function approveDeviceCode(string $userCode, string $userId): void
-    {
-        $deviceCode = $this->deviceCodeManager->findByUserCode($userCode);
-
-        if (false === $deviceCode instanceof DeviceCodeInterface) {
-            throw OAuthServerException::invalidRequest('device_code', 'Device code does not exist');
-        }
-
-        if ($deviceCode->isRevoked()) {
-            throw OAuthServerException::invalidRequest('device_code', 'Device code has been revoked');
-        }
-
-        if ('' === $userId) {
-            throw OAuthServerException::invalidRequest('user_id', 'User ID is required');
-        }
-
-        $deviceCode->setUserIdentifier($userId);
-        $deviceCode->setUserApproved(true);
 
         $this->deviceCodeManager->save($deviceCode);
     }

@@ -27,7 +27,8 @@ This is a sample Symfony 7 controller to handle the user code input
 
 namespace App\Controller;
 
-use League\Bundle\OAuth2ServerBundle\Repository\DeviceCodeRepository;
+use League\Bundle\OAuth2ServerBundle\Manager\DeviceCodeManagerInterface;
+use League\OAuth2\Server\AuthorizationServer;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,7 +53,15 @@ public function verifyDevice(
 
     if ($form->isSubmitted() && $form->isValid()) {
         try {
-            $this->deviceCodeRepository->approveDeviceCode($form->get('userCode')->getData(), $this->getUser()->getId());
+            $deviceCode = $this->deviceCodeManager->findByUserCode($form->get('userCode')->getData());
+            if (null === $deviceCode) {
+                throw OAuthServerException::invalidGrant('Invalid user code');
+            }
+            $this->authorizationServer->completeDeviceAuthorizationRequest(
+                $deviceCode->getIdentifier(),
+                $this->getUser()->getId(),
+                true // User has approved the device on his end
+            );
             // Device code approved, show success message to user
         } catch (OAuthServerException $e) {
             // Handle exception (invalid code or missing user ID)
