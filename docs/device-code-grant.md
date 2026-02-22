@@ -2,13 +2,19 @@
 
 The device code grant type is designed for devices without a browser or with limited input capabilities. In this flow, the user authenticates on another device—like a smartphone or computer—and receives a code to enter on the original device.
 
-Initially, the device sends a request to /device-code with its client ID and scope. The server then returns a device code, a user code, and a verification URL. The user takes the code to a secondary device, opens the verification URL in a browser, and enters the user code.
+Initially, the device sends a request to `/device-code` with its client ID and scope. The server then returns a device code, a user code, and a verification URL. The user takes the code to a secondary device, opens the verification URL in a browser, and enters the user code.
 
-Meanwhile, the original device continuously polls the /token endpoint with the device code. Once the user approves the request on the secondary device, the token endpoint returns the access token to the polling device.
+Meanwhile, the original device continuously polls the `/token` endpoint with the device code. Once the user approves the request on the secondary device, the token endpoint returns the access token to the polling device.
 
 ## Requirements
 
 You need to implement the verification URL yourself and handle the user code input : this bundle does not provide a route or UI for this.
+
+## Security considerations
+
+The OAuth 2.0 Device Grant explicitly prohibits the use of client secret credentials in the device flow.
+
+Accordingly, this flow must only be used with public clients (use the `--public` option when creating the client via the CLI). The `/token` endpoint must be called with an empty `client_secret` parameter.
 
 ## Example
 
