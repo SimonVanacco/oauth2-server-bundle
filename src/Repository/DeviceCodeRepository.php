@@ -62,7 +62,7 @@ final class DeviceCodeRepository implements DeviceCodeRepositoryInterface
         if (null === $deviceCode) {
             $deviceCode = $this->buildDeviceCodeModel($deviceCodeEntity);
         } else {
-            $deviceCode = $this->updateDeviceCodeModel($deviceCode, $deviceCodeEntity);
+            $this->updateDeviceCodeModel($deviceCode, $deviceCodeEntity);
         }
 
         $this->deviceCodeManager->save($deviceCode);
@@ -130,19 +130,18 @@ final class DeviceCodeRepository implements DeviceCodeRepositoryInterface
         $deviceCodeEntity = new DeviceCodeEntity();
         $deviceCodeEntity->setIdentifier($deviceCode->getIdentifier());
         $deviceCodeEntity->setExpiryDateTime($deviceCode->getExpiry());
-        $client = $this->clientRepository->getClientEntity($deviceCode->getClient()->getIdentifier());
-        if ($client) {
+        if (null !== $client = $this->clientRepository->getClientEntity($deviceCode->getClient()->getIdentifier())) {
             $deviceCodeEntity->setClient($client);
         }
-        if ($deviceCode->getUserIdentifier()) {
-            $deviceCodeEntity->setUserIdentifier($deviceCode->getUserIdentifier());
+        if ('' !== $userIdentifier = (string) $deviceCode->getUserIdentifier()) {
+            $deviceCodeEntity->setUserIdentifier($userIdentifier);
         }
         $deviceCodeEntity->setUserCode($deviceCode->getUserCode());
         $deviceCodeEntity->setUserApproved($deviceCode->getUserApproved());
         $deviceCodeEntity->setVerificationUriCompleteInAuthResponse($deviceCode->getIncludeVerificationUriComplete());
         $deviceCodeEntity->setVerificationUri($deviceCode->getVerificationUri());
-        if ($deviceCode->getLastPolledAt()) {
-            $deviceCodeEntity->setLastPolledAt($deviceCode->getLastPolledAt());
+        if (null !== $lastPolledAt = $deviceCode->getLastPolledAt()) {
+            $deviceCodeEntity->setLastPolledAt($lastPolledAt);
         }
         $deviceCodeEntity->setInterval($deviceCode->getInterval());
 
@@ -175,16 +174,13 @@ final class DeviceCodeRepository implements DeviceCodeRepositoryInterface
     private function updateDeviceCodeModel(
         DeviceCodeInterface $deviceCode,
         DeviceCodeEntityInterface $deviceCodeEntity,
-    ): DeviceCodeInterface {
+    ): void {
         if ($deviceCodeEntity->getLastPolledAt()) {
             $deviceCode->setLastPolledAt($deviceCodeEntity->getLastPolledAt());
         }
-
         if ($deviceCodeEntity->getUserIdentifier()) {
             $deviceCode->setUserIdentifier($deviceCodeEntity->getUserIdentifier());
             $deviceCode->setUserApproved($deviceCodeEntity->getUserApproved());
         }
-
-        return $deviceCode;
     }
 }

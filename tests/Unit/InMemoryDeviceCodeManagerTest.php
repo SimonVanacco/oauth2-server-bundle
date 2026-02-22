@@ -27,7 +27,6 @@ final class InMemoryDeviceCodeManagerTest extends TestCase
         $this->assertSame(3, $inMemoryDeviceCodeManager->clearExpired());
 
         $reflectionProperty = new \ReflectionProperty(InMemoryDeviceCodeManager::class, 'deviceCodes');
-        $reflectionProperty->setAccessible(true);
 
         $this->assertSame($testData['output'], $reflectionProperty->getValue($inMemoryDeviceCodeManager));
     }
