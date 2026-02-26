@@ -110,7 +110,7 @@ final class DeviceCodeRepository implements DeviceCodeRepositoryInterface
         if (null !== $client = $this->clientRepository->getClientEntity($deviceCode->getClient()->getIdentifier())) {
             $deviceCodeEntity->setClient($client);
         }
-        if ('' !== $userIdentifier = (string) $deviceCode->getUserIdentifier()) {
+        if (null !== $userIdentifier = $deviceCode->getUserIdentifier()) {
             $deviceCodeEntity->setUserIdentifier($userIdentifier);
         }
         $deviceCodeEntity->setUserCode($deviceCode->getUserCode());
@@ -155,8 +155,9 @@ final class DeviceCodeRepository implements DeviceCodeRepositoryInterface
         if ($deviceCodeEntity->getLastPolledAt()) {
             $deviceCode->setLastPolledAt($deviceCodeEntity->getLastPolledAt());
         }
-        if ($deviceCodeEntity->getUserIdentifier()) {
-            $deviceCode->setUserIdentifier($deviceCodeEntity->getUserIdentifier());
+        $userIdentifier = $deviceCodeEntity->getUserIdentifier();
+        if (null !== $userIdentifier && '' !== $userIdentifier) {
+            $deviceCode->setUserIdentifier($userIdentifier);
             $deviceCode->setUserApproved($deviceCodeEntity->getUserApproved());
         }
     }

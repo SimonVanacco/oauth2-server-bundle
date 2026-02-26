@@ -17,8 +17,14 @@ interface DeviceCodeInterface
 
     public function getExpiry(): \DateTimeImmutable;
 
+    /**
+     * @return non-empty-string|null
+     */
     public function getUserIdentifier(): ?string;
 
+    /**
+     * @param non-empty-string $userIdentifier
+     */
     public function setUserIdentifier(string $userIdentifier): self;
 
     public function getClient(): ClientInterface;

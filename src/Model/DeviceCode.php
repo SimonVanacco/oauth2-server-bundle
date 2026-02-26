@@ -19,7 +19,7 @@ class DeviceCode implements DeviceCodeInterface
     private $expiry;
 
     /**
-     * @var string|null
+     * @var non-empty-string|null
      */
     private $userIdentifier;
 
@@ -70,6 +70,7 @@ class DeviceCode implements DeviceCodeInterface
 
     /**
      * @param non-empty-string $identifier
+     * @param non-empty-string|null $userIdentifier
      * @param list<Scope> $scopes
      */
     public function __construct(
@@ -116,7 +117,7 @@ class DeviceCode implements DeviceCodeInterface
         return $this->userIdentifier;
     }
 
-    public function setUserIdentifier(?string $userIdentifier): DeviceCodeInterface
+    public function setUserIdentifier(string $userIdentifier): DeviceCodeInterface
     {
         $this->userIdentifier = $userIdentifier;
 
